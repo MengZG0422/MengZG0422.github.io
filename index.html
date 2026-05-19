@@ -1,280 +1,228 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>投资分析学习笔记</title>
-    <style>
-        :root {
-            --bg: #fafaf9;
-            --card-bg: #ffffff;
-            --text: #1c1917;
-            --text-muted: #78716c;
-            --border: #e7e5e4;
-            --accent: #2563eb;
-            --accent-light: #eff6ff;
-            --tag-bg: #f5f5f4;
-        }
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #0c0a09;
-                --card-bg: #1c1917;
-                --text: #e7e5e4;
-                --text-muted: #a8a29e;
-                --border: #292524;
-                --accent: #60a5fa;
-                --accent-light: #1e293b;
-                --tag-bg: #292524;
-            }
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.8;
-            font-size: 16px;
-        }
-        .container { max-width: 800px; margin: 0 auto; padding: 40px 24px 80px; }
-        header { text-align: center; padding: 60px 0 40px; }
-        header h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
-        header p { color: var(--text-muted); font-size: 0.95rem; }
-        .divider { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
-        h2 {
-            font-size: 1.35rem; font-weight: 700; margin: 40px 0 16px;
-            padding-bottom: 12px; border-bottom: 2px solid var(--accent);
-            display: flex; align-items: center; gap: 10px;
-        }
-        h2 .num {
-            background: var(--accent); color: #fff; font-size: 0.85rem;
-            width: 28px; height: 28px; border-radius: 6px; display: flex;
-            align-items: center; justify-content: center; flex-shrink: 0;
-        }
-        h3 { font-size: 1.1rem; font-weight: 600; margin: 28px 0 12px; color: var(--accent); }
-        p { margin: 10px 0; }
-        .card {
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 10px; padding: 24px; margin: 20px 0;
-        }
-        table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.95rem; }
-        th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { background: var(--tag-bg); font-weight: 600; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        ul, ol { padding-left: 24px; margin: 10px 0; }
-        li { margin: 6px 0; }
-        strong { color: var(--accent); }
-        blockquote {
-            border-left: 3px solid var(--accent); margin: 16px 0;
-            padding: 8px 16px; background: var(--accent-light); border-radius: 0 6px 6px 0;
-            font-weight: 500;
-        }
-        .tag {
-            display: inline-block; background: var(--tag-bg); color: var(--text-muted);
-            padding: 2px 10px; border-radius: 4px; font-size: 0.85rem; margin: 2px 4px;
-        }
-        .checklist { list-style: none; padding-left: 0; }
-        .checklist li { padding: 6px 0; }
-        .checklist li::before { content: "☐ "; color: var(--accent); font-weight: bold; }
-        .recommend {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-        }
-        @media (max-width: 600px) {
-            .recommend { grid-template-columns: 1fr; }
-            header { padding: 40px 0 24px; }
-            header h1 { font-size: 1.5rem; }
-        }
-        .book-card {
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 8px; padding: 16px;
-        }
-        .book-card .title { font-weight: 600; }
-        .book-card .author { color: var(--text-muted); font-size: 0.9rem; }
-        .book-card .desc { font-size: 0.9rem; margin-top: 4px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>北京时间</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0a09;
+    --text: #d4cfc8;
+    --muted: #6b6560;
+    --accent: #c9a96e;
+    --accent-dim: rgba(201,169,110,0.15);
+    --ring: rgba(212,207,200,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Noto Serif SC", "Cormorant Garamond", serif;
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Subtle grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  /* Seconds ring */
+  .ring-wrap {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto 60px;
+  }
+
+  .ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid var(--ring);
+  }
+
+  .ring-progress {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    border-top-color: var(--accent);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ring-dot {
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 12px var(--accent-dim), 0 0 40px var(--accent-dim);
+  }
+
+  /* Time */
+  .time {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 300;
+    font-size: clamp(4rem, 12vw, 8rem);
+    letter-spacing: 0.06em;
+    color: var(--text);
+    line-height: 1;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.08em;
+  }
+
+  .time .colon {
+    color: var(--accent);
+    opacity: 0.6;
+    animation: breathe 2s ease-in-out infinite;
+  }
+
+  .time .colon:nth-child(4) { animation-delay: 1s; }
+
+  @keyframes breathe {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+  }
+
+  .time .seconds {
+    font-size: 0.45em;
+    color: var(--muted);
+    align-self: flex-start;
+    margin-top: 0.4em;
+    letter-spacing: 0.04em;
+    font-weight: 300;
+  }
+
+  /* Date */
+  .date {
+    font-size: 1.05rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    font-weight: 300;
+    margin-top: -20px;
+  }
+
+  .date .weekday {
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  /* Footer */
+  .footer {
+    position: fixed;
+    bottom: 36px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 2;
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    opacity: 0.5;
+    font-weight: 300;
+  }
+
+  /* Fade in */
+  .container {
+    animation: fadeUp 1.6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>📊 投资分析学习笔记</h1>
-            <p>行业分析 · 公司分析 · 投资决策框架</p>
-            <p style="margin-top:4px"><span class="tag">2026-05-16</span></p>
-        </header>
 
-        <hr class="divider">
-
-        <!-- 第一层：行业分析 -->
-        <h2><span class="num">1</span> 行业分析 —— 这个赛道值得看吗？</h2>
-
-        <h3>1.1 行业分类与边界</h3>
-        <p>首先搞清楚"这到底是什么行业"，以及它的边界在哪里。很多分析出错就是因为行业定义错了。比如星巴克，到底是"咖啡行业"还是"第三空间体验行业"？不同的定义会导出完全不同的竞争格局。</p>
-
-        <h3>1.2 行业生命周期</h3>
-        <div class="card">
-            <table>
-                <thead>
-                    <tr><th>阶段</th><th>特征</th><th>投资含义</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>导入期</strong></td><td>高增速、高投入、普遍亏损</td><td>赌对了回报极高，但死亡率也很高</td></tr>
-                    <tr><td><strong>成长期</strong></td><td>增速 20%+、竞争者涌入、龙头初现</td><td>最佳投资窗口，重点找能跑出来的龙头</td></tr>
-                    <tr><td><strong>成熟期</strong></td><td>增速 5-15%、格局稳定、利润释放</td><td>关注龙头+分红，估值要给合理倍数</td></tr>
-                    <tr><td><strong>衰退期</strong></td><td>负增长、产能过剩、价格战</td><td>除非有反转催化剂，否则回避</td></tr>
-                </tbody>
-            </table>
-        </div>
-        <blockquote>关键问题：<strong>这个行业处于哪个阶段？拐点在哪？</strong></blockquote>
-
-        <h3>1.3 波特五力 —— 判断行业"赚钱难度"</h3>
-        <p>你投资一家公司之前，得先知道这个行业本身是不是一个"好生意"的土壤：</p>
-        <ul>
-            <li><strong>新进入者威胁</strong>：门槛高不高？需要牌照吗？需要巨额资本吗？</li>
-            <li><strong>供应商议价权</strong>：上游集中吗？原材料是否容易被卡脖子？</li>
-            <li><strong>买方议价权</strong>：客户集中吗？切换成本高吗？</li>
-            <li><strong>替代品威胁</strong>：有没有其他方式满足同一需求？</li>
-            <li><strong>现有竞争者强度</strong>：是在打价格战，还是各有差异化？</li>
-        </ul>
-        <blockquote>五力越弱，行业越赚钱。<strong>如果一个行业连龙头企业都赚得辛苦，那大概率是行业本身的问题。</strong></blockquote>
-
-        <h3>1.4 市场规模与增速（TAM / SAM / SOM）</h3>
-        <ul>
-            <li><strong>TAM（总可寻址市场）</strong>：最乐观的天花板</li>
-            <li><strong>SAM（可服务市场）</strong>：你能触达的部分</li>
-            <li><strong>SOM（可获取市场）</strong>：你实际能拿下的</li>
-        </ul>
-        <p>不要只看到"万亿市场"，关键看 <strong>渗透率</strong> 和 <strong>增速拐点</strong>。增速在加速（二阶导为正）比增速本身更重要。</p>
-
-        <h3>1.5 关键驱动因素</h3>
-        <p>每个行业都有 2-3 个最核心的变量。比如：</p>
-        <ul>
-            <li>光伏：政策补贴 + 度电成本</li>
-            <li>消费：人均收入 + 消费习惯变迁</li>
-            <li>半导体：下游需求周期 + 资本开支周期</li>
-        </ul>
-        <blockquote><strong>找到驱动因素，你才能回答"什么情况下这个行业会更好/更差"。</strong></blockquote>
-
-        <hr class="divider">
-
-        <!-- 第二层：公司分析 -->
-        <h2><span class="num">2</span> 公司分析 —— 为什么是这家，不是别家？</h2>
-        <p>用"护城河 + 财务 + 管理层"三维框架。</p>
-
-        <h3>2.1 护城河（Moat）—— 为什么你能持续赚钱？</h3>
-        <p>晨星将护城河分为五类：</p>
-        <div class="card">
-            <table>
-                <thead>
-                    <tr><th>护城河类型</th><th>核心问题</th><th>典型案例</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>无形资产</strong></td><td>品牌、专利、牌照是否形成壁垒？</td><td>茅台、迪士尼、药企专利</td></tr>
-                    <tr><td><strong>转换成本</strong></td><td>客户离开你有多痛苦？</td><td>Salesforce、微信</td></tr>
-                    <tr><td><strong>网络效应</strong></td><td>用的人越多，产品越好用吗？</td><td>淘宝、美团、Airbnb</td></tr>
-                    <tr><td><strong>成本优势</strong></td><td>你能比别人更便宜吗？是规模、工艺还是地理位置？</td><td>比亚迪、Costco</td></tr>
-                    <tr><td><strong>规模效应</strong></td><td>固定成本能否被不断扩大的销量摊薄？</td><td>台积电</td></tr>
-                </tbody>
-            </table>
-        </div>
-        <blockquote><strong>核心问题只有一句：如果这家公司明天提价 10%，客户会走吗？</strong> 走得多就是没有护城河。</blockquote>
-
-        <h3>2.2 财务分析 —— 数字不说谎</h3>
-        <p>不用看几十个指标，抓住这几个就够：</p>
-        <p><strong>成长性：</strong></p>
-        <ul>
-            <li>营收增速（还要看是量价中的哪个在驱动）</li>
-            <li>经营现金流增速 > 利润增速 > 营收增速（最健康的排序）</li>
-        </ul>
-        <p><strong>盈利质量：</strong></p>
-        <ul>
-            <li>毛利率 —— 越高说明壁垒越强</li>
-            <li>ROE（净资产收益率）—— 巴菲特最看重的指标，长期&gt;15%就是好公司</li>
-            <li>自由现金流 —— 利润可以是假的，现金不会</li>
-        </ul>
-        <p><strong>风险排查：</strong></p>
-        <ul>
-            <li>有息负债率（剔除预收款）是否过高？</li>
-            <li>应收账款增速是否远超营收增速？（可能是在"塞货"冲业绩）</li>
-            <li>经营现金流是否长期低于净利润？（利润可能只是纸面的）</li>
-        </ul>
-
-        <h3>2.3 管理层</h3>
-        <ul>
-            <li><strong>能力</strong>：历史上的战略决策兑现了吗？行业低谷时做了什么？</li>
-            <li><strong>利益一致性</strong>：管理层持股多少？薪酬结构是激励长期还是短期？</li>
-            <li><strong>诚信</strong>：有没有做过侵害小股东利益的事？（关联交易、减持套现、乱投资）</li>
-        </ul>
-        <blockquote><strong>最便宜的预警信号：</strong>管理层说话是否兑现。画饼 10 次只实现 2 次的团队，直接跳过。</blockquote>
-
-        <hr class="divider">
-
-        <!-- 第三层：投资决策 -->
-        <h2><span class="num">3</span> 投资决策 —— 好公司不等于好投资</h2>
-
-        <h3>3.1 估值 —— 为好东西付多少钱？</h3>
-        <div class="card">
-            <table>
-                <thead>
-                    <tr><th>估值方法</th><th>适用场景</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>PE（市盈率）</strong></td><td>盈利稳定的成熟公司</td></tr>
-                    <tr><td><strong>PB（市净率）</strong></td><td>金融、周期股</td></tr>
-                    <tr><td><strong>PS（市销率）</strong></td><td>高增长但尚未盈利的公司</td></tr>
-                    <tr><td><strong>PEG（PE / 增速）</strong></td><td>成长股，PEG&lt;1 可视为相对便宜</td></tr>
-                    <tr><td><strong>DCF（现金流折现）</strong></td><td>真正理解内在价值，但关键假设变一点差很远</td></tr>
-                </tbody>
-            </table>
-        </div>
-        <blockquote><strong>核心原则：估值不是某一个数字，而是一个区间。</strong> 你要做的是判断现在价格相对于历史分位、相对于同行、相对于无风险利率，是贵还是便宜。</blockquote>
-
-        <h3>3.2 安全边际</h3>
-        <p>格雷厄姆的核心思想：<strong>用 0.6 元买价值 1 元的东西。</strong></p>
-        <p>越确定的东西给的折扣可以越小，越不确定的折扣要越大。成长股的风险恰恰在于：你以为确定性很高，所以给很小的折扣，结果 AI 淘汰了你。</p>
-
-        <h3>3.3 催化剂 —— 什么能让价值被实现？</h3>
-        <p>低估不是买入的理由，<strong>低估 + 催化剂才是</strong>。催化剂包括：</p>
-        <ul>
-            <li>新产品/新市场突破</li>
-            <li>行业政策转向</li>
-            <li>管理层变更</li>
-            <li>业绩拐点出现</li>
-        </ul>
-        <blockquote>没有催化剂，你可能会"对但太早"——这在投资中跟错是一样的。</blockquote>
-
-        <h3>3.4 投资检查清单（动手前的最后一步）</h3>
-        <p>买入前确认：</p>
-        <ol class="checklist">
-            <li>用一句话说清楚这家公司为什么能长期赚钱？</li>
-            <li>竞争对手能不能轻易复制？</li>
-            <li>如果明天股价跌 30%，我会加仓还是恐慌？</li>
-            <li>这笔投资最大的风险是什么？发生概率多大？</li>
-            <li>我的卖出条件是什么？（别等亏了再想）</li>
-        </ol>
-
-        <hr class="divider">
-
-        <!-- 推荐阅读 -->
-        <h2 style="border-bottom-color:#d97706">📚 推荐阅读（由浅入深）</h2>
-        <div class="recommend">
-            <div class="book-card">
-                <div class="title">《投资中最简单的事》</div>
-                <div class="author">邱国鹭</div>
-                <div class="desc">最适合入门，中国视角</div>
-            </div>
-            <div class="book-card">
-                <div class="title">《股市真规则》</div>
-                <div class="author">帕特·多尔西</div>
-                <div class="desc">行业分析框架经典</div>
-            </div>
-            <div class="book-card">
-                <div class="title">《聪明的投资者》</div>
-                <div class="author">格雷厄姆</div>
-                <div class="desc">价值投资的原点</div>
-            </div>
-            <div class="book-card">
-                <div class="title">《巴菲特致股东的信》</div>
-                <div class="author">巴菲特</div>
-                <div class="desc">每年一封，最好的投资教材</div>
-            </div>
-        </div>
+<div class="container">
+  <div class="ring-wrap">
+    <div class="ring"></div>
+    <div class="ring-progress" id="ringProgress">
+      <div class="ring-dot"></div>
     </div>
+    <div class="time" id="timeDisplay">
+      <span id="hours">00</span><span class="colon">:</span><span id="minutes">00</span><span class="colon">:</span><span class="seconds" id="secs">00</span>
+    </div>
+  </div>
+  <div class="date" id="dateDisplay"></div>
+</div>
+
+<div class="footer">BEIJING · CHINA STANDARD TIME</div>
+
+<script>
+const weekdays = ['周日','周一','周二','周三','周四','周五','周六'];
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function update() {
+  const now = new Date();
+
+  // Beijing time: UTC+8
+  const beijing = new Date(now.getTime() + (8 - now.getTimezoneOffset() / 60) * 3600000);
+
+  // Actually, simpler approach using toLocaleString
+  const bj = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }));
+
+  const h = bj.getHours();
+  const m = bj.getMinutes();
+  const s = bj.getSeconds();
+  const ms = bj.getMilliseconds();
+
+  document.getElementById('hours').textContent = pad(h);
+  document.getElementById('minutes').textContent = pad(m);
+
+  // Smooth seconds
+  const secEl = document.getElementById('secs');
+  if (secEl) secEl.textContent = pad(s);
+
+  // Ring rotation: full circle in 60 seconds, with sub-second smoothness
+  const totalSeconds = s + ms / 1000;
+  const deg = (totalSeconds / 60) * 360;
+  document.getElementById('ringProgress').style.transform = `rotate(${deg}deg)`;
+
+  // Date
+  const y = bj.getFullYear();
+  const M = bj.getMonth() + 1;
+  const d = bj.getDate();
+  const w = weekdays[bj.getDay()];
+  document.getElementById('dateDisplay').innerHTML =
+    `${y}年${M}月${d}日 &nbsp;<span class="weekday">${w}</span>`;
+}
+
+update();
+setInterval(update, 200);
+</script>
 </body>
 </html>
