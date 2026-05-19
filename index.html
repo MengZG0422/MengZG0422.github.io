@@ -6,22 +6,13 @@
 <title>北京时间</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Noto+Serif+SC:wght@300;400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0b0a09;
-    --text: #d4cfc8;
-    --muted: #6b6560;
-    --accent: #c9a96e;
-    --accent-dim: rgba(201,169,110,0.15);
-    --ring: rgba(212,207,200,0.08);
-  }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: var(--bg);
-    color: var(--text);
+    background: #0b0a09;
+    color: #d4cfc8;
     font-family: "Noto Serif SC", "Cormorant Garamond", serif;
     height: 100dvh;
     display: flex;
@@ -32,197 +23,109 @@
     -webkit-user-select: none;
   }
 
-  /* Subtle grain overlay */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-    background-size: 200px 200px;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     pointer-events: none;
-    z-index: 1;
   }
 
-  .container {
-    position: relative;
-    z-index: 2;
+  main {
     text-align: center;
+    animation: in 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) both;
   }
 
-  /* Seconds ring */
-  .ring-wrap {
-    position: relative;
-    width: 300px;
-    height: 300px;
-    margin: 0 auto 60px;
-  }
-
-  .ring {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 1px solid var(--ring);
-  }
-
-  .ring-progress {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 1px solid transparent;
-    border-top-color: var(--accent);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .ring-dot {
-    position: absolute;
-    top: -3px;
-    left: 50%;
-    width: 6px;
-    height: 6px;
-    background: var(--accent);
-    border-radius: 50%;
-    transform: translateX(-50%);
-    box-shadow: 0 0 12px var(--accent-dim), 0 0 40px var(--accent-dim);
-  }
-
-  /* Time */
   .time {
     font-family: "Cormorant Garamond", serif;
     font-weight: 300;
-    font-size: clamp(4rem, 12vw, 8rem);
+    font-size: clamp(5rem, 14vw, 10rem);
     letter-spacing: 0.06em;
-    color: var(--text);
     line-height: 1;
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.08em;
   }
 
   .time .colon {
-    color: var(--accent);
-    opacity: 0.6;
+    color: #c9a96e;
+    opacity: 0.5;
     animation: breathe 2s ease-in-out infinite;
   }
+  .time .colon:last-child { animation-delay: 1s; }
 
-  .time .colon:nth-child(4) { animation-delay: 1s; }
-
-  @keyframes breathe {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.8; }
+  .time .sec {
+    font-size: 0.42em;
+    color: #6b6560;
+    vertical-align: 0.5em;
+    letter-spacing: 0.03em;
   }
 
-  .time .seconds {
-    font-size: 0.45em;
-    color: var(--muted);
-    align-self: flex-start;
-    margin-top: 0.4em;
-    letter-spacing: 0.04em;
-    font-weight: 300;
-  }
-
-  /* Date */
   .date {
-    font-size: 1.05rem;
-    color: var(--muted);
-    letter-spacing: 0.12em;
+    margin-top: 24px;
+    font-size: 1rem;
+    color: #6b6560;
+    letter-spacing: 0.15em;
     font-weight: 300;
-    margin-top: -20px;
   }
 
-  .date .weekday {
-    color: var(--accent);
+  .date span {
+    color: #c9a96e;
     font-weight: 400;
   }
 
-  /* Footer */
-  .footer {
-    position: fixed;
-    bottom: 36px;
-    left: 0;
-    right: 0;
-    text-align: center;
-    z-index: 2;
-    font-size: 0.8rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
+  .line {
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, transparent, #6b6560, transparent);
+    margin: 36px auto 0;
+    opacity: 0.4;
+  }
+
+  .zone {
+    margin-top: 32px;
+    font-size: 0.75rem;
+    color: #6b6560;
+    letter-spacing: 0.2em;
     opacity: 0.5;
     font-weight: 300;
   }
 
-  /* Fade in */
-  .container {
-    animation: fadeUp 1.6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  @keyframes breathe {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 0.7; }
   }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+  @keyframes in {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="ring-wrap">
-    <div class="ring"></div>
-    <div class="ring-progress" id="ringProgress">
-      <div class="ring-dot"></div>
-    </div>
-    <div class="time" id="timeDisplay">
-      <span id="hours">00</span><span class="colon">:</span><span id="minutes">00</span><span class="colon">:</span><span class="seconds" id="secs">00</span>
-    </div>
+<main>
+  <div class="time" id="time">
+    <span id="h">00</span><span class="colon">:</span><span id="m">00</span><span class="colon">:</span><span class="sec" id="s">00</span>
   </div>
-  <div class="date" id="dateDisplay"></div>
-</div>
-
-<div class="footer">BEIJING · CHINA STANDARD TIME</div>
+  <div class="date" id="d"></div>
+  <div class="line"></div>
+  <div class="zone">BEIJING · UTC+8</div>
+</main>
 
 <script>
-const weekdays = ['周日','周一','周二','周三','周四','周五','周六'];
+const wk = ['周日','周一','周二','周三','周四','周五','周六'];
+const p = n => String(n).padStart(2,'0');
 
-function pad(n) { return String(n).padStart(2, '0'); }
-
-function update() {
-  const now = new Date();
-
-  // Beijing time: UTC+8
-  const beijing = new Date(now.getTime() + (8 - now.getTimezoneOffset() / 60) * 3600000);
-
-  // Actually, simpler approach using toLocaleString
-  const bj = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }));
-
-  const h = bj.getHours();
-  const m = bj.getMinutes();
-  const s = bj.getSeconds();
-  const ms = bj.getMilliseconds();
-
-  document.getElementById('hours').textContent = pad(h);
-  document.getElementById('minutes').textContent = pad(m);
-
-  // Smooth seconds
-  const secEl = document.getElementById('secs');
-  if (secEl) secEl.textContent = pad(s);
-
-  // Ring rotation: full circle in 60 seconds, with sub-second smoothness
-  const totalSeconds = s + ms / 1000;
-  const deg = (totalSeconds / 60) * 360;
-  document.getElementById('ringProgress').style.transform = `rotate(${deg}deg)`;
-
-  // Date
-  const y = bj.getFullYear();
-  const M = bj.getMonth() + 1;
-  const d = bj.getDate();
-  const w = weekdays[bj.getDay()];
-  document.getElementById('dateDisplay').innerHTML =
-    `${y}年${M}月${d}日 &nbsp;<span class="weekday">${w}</span>`;
+function tick() {
+  const bj = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }));
+  document.getElementById('h').textContent = p(bj.getHours());
+  document.getElementById('m').textContent = p(bj.getMinutes());
+  document.getElementById('s').textContent = p(bj.getSeconds());
+  document.getElementById('d').innerHTML =
+    `${bj.getFullYear()}年${bj.getMonth()+1}月${bj.getDate()}日 &nbsp;<span>${wk[bj.getDay()]}</span>`;
 }
 
-update();
-setInterval(update, 200);
+tick();
+setInterval(tick, 1000);
 </script>
 </body>
 </html>
