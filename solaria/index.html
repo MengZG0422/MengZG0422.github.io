@@ -1,0 +1,174 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f7f5ef"><title>Menu Bridge · Solaria</title><style>
+.site-nav{display:flex;gap:6px;padding:5px;background:#e9eee8;border-radius:13px;margin:0 0 18px}.site-nav a{flex:1;text-align:center;text-decoration:none;color:#61756a;border-radius:10px;padding:10px 5px;font-weight:750}.site-nav a.current{background:#fff;color:#244f40;box-shadow:0 1px 5px #203c2810}.site-nav span{font-size:11px;font-weight:500;margin-left:3px}:root{--ink:#1b2924;--green:#244f40;--light:#e8efe9;--orange:#f2a65a;--muted:#697870;--bg:#f8f7f2}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,sans-serif}button,input,select{font:inherit}button{cursor:pointer}.wrap{max-width:740px;margin:auto;padding:0 20px 120px}header{padding:25px 0 22px;display:flex;justify-content:space-between;align-items:center}.brand{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--green)}.lang{border:1px solid #cfd8d0;background:white;border-radius:30px;padding:8px 12px}.hero{background:var(--green);color:#fff;border-radius:23px;padding:24px 22px;margin-bottom:20px}.eyebrow{color:#b8d9c5;font-size:11px;font-weight:800;letter-spacing:.15em}.hero h1{font-size:clamp(31px,7vw,48px);line-height:1.04;letter-spacing:-.04em;margin:10px 0}.hero p{color:#d4e3da;max-width:500px;margin:12px 0 0}.notice{background:#fff8e8;color:#674c20;border-radius:13px;padding:13px 15px;margin:14px 0;font-size:13px}.search{width:100%;padding:14px 16px;border-radius:13px;border:1px solid #d4ddd6;background:#fff;outline-color:var(--green)}.cats{display:flex;gap:8px;overflow:auto;padding:13px 0;position:sticky;top:0;background:var(--bg);z-index:2;scrollbar-width:none}.cats button{white-space:nowrap;border:1px solid #d7ded8;border-radius:30px;background:white;color:var(--green);padding:8px 13px}.cats button.active{background:var(--green);color:white;border-color:var(--green)}.group{margin:24px 0}.group h2{font-size:22px;margin:0}.group .sub{color:var(--muted);font-size:12px;margin-bottom:12px}.item{display:flex;gap:12px;align-items:center;border-top:1px solid #e0e6df;padding:15px 0}.info{flex:1;min-width:0}.name{font-weight:750;font-size:16px}.original{color:var(--muted);font-size:13px;margin:3px 0}.price{font-size:13px;font-weight:700}.add,.qty button{border:0;border-radius:50%;width:36px;height:36px;background:var(--light);color:var(--green);font-size:22px;line-height:1}.qty{display:flex;gap:9px;align-items:center;font-weight:700}.qty button{width:32px;height:32px}.footer{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(transparent,var(--bg) 22%);padding:20px 20px 17px;z-index:4}.bar{max-width:700px;margin:auto;display:flex;justify-content:space-between;align-items:center;background:var(--green);color:white;border:0;border-radius:15px;padding:14px 18px;width:100%;font-weight:750;box-shadow:0 6px 25px #1e493333}.bar small{font-weight:500;color:#cee2d5}.dialog{position:fixed;inset:0;background:#12251caa;z-index:5;display:none;align-items:end;justify-content:center}.dialog.open{display:flex}.sheet{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:740px;max-height:92dvh;overflow:auto;padding:23px 22px 36px}.top{display:flex;justify-content:space-between;align-items:center}.close{border:0;background:#edf2ed;border-radius:50%;width:36px;height:36px;font-size:20px}.sheet h2{margin:0;font-size:25px}.sheet h3{margin-bottom:6px}.orderrow{padding:13px 0;border-bottom:1px solid #e6ebe6}.orderrow b{font-size:16px}.orderrow span{float:right}.orderrow small{display:block;color:var(--muted)}.sum{display:flex;justify-content:space-between;font-weight:750;margin-top:16px}.muted{color:var(--muted);font-size:13px}.staff{background:#edf4ee;border-radius:16px;padding:16px;margin-top:20px}.staff h3{margin:0 0 8px}.staff ul{padding-left:20px;margin:0}.staff li{margin:6px 0}.input{width:100%;border:1px solid #d3ddd5;border-radius:10px;padding:12px;margin-top:8px}.actions{display:flex;gap:8px;margin-top:20px}.actions button{flex:1;padding:13px;border:0;border-radius:12px;background:var(--green);color:white;font-weight:700}.actions .secondary{background:#edf3ee;color:var(--green)}.empty{text-align:center;color:var(--muted);padding:30px}.warn{font-size:12px;color:#74592e}.hint{font-size:12px;color:var(--muted);margin-top:5px}.fx{background:#edf3ee;border-radius:13px;padding:13px 15px;margin:14px 0;display:flex;gap:12px;justify-content:space-between;align-items:center}.fx strong{display:block;font-size:13px}.fx-status{color:var(--muted);font-size:12px;line-height:1.4}.fx select{border:1px solid #cfd8d0;background:white;border-radius:9px;padding:9px;max-width:135px}.converted{color:#46745c;font-weight:650;margin-left:6px;font-size:12px}
+.site-nav{display:flex;align-items:center;gap:8px;width:100%;padding:7px max(18px,calc((100% - 680px)/2)) calc(7px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #e1e9e1;box-shadow:0 -5px 24px #193b2910;z-index:4}.site-nav a{flex:1;min-height:52px;display:flex;align-items:center;justify-content:center;gap:10px;text-align:left;text-decoration:none;color:#809188;border-radius:13px;font-size:14px;font-weight:700;padding:7px 10px;line-height:1.15}.site-nav a.current{background:#e8f1e8;color:#244f40;box-shadow:none}.site-nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}.site-nav span{display:flex;flex-direction:column;gap:3px;font-size:14px;font-weight:750;margin:0}.site-nav small{font-size:9px;font-weight:600;letter-spacing:.08em}.site-nav a:focus-visible{outline:2px solid #537d64;outline-offset:-2px}.site-nav{position:fixed;left:0;right:0;bottom:0}.wrap{padding-bottom:180px}.footer{bottom:calc(67px + env(safe-area-inset-bottom));padding:16px 20px 8px}.footer.empty{display:none}.dialog{z-index:8}.sheet{padding-bottom:calc(36px + env(safe-area-inset-bottom))}</style></head><body><main class="wrap"><header><div class="brand">MENU BRIDGE <span style="color:#9bada1">/</span> SOLARIA</div><select class="lang" id="lang" aria-label="Language"><option value="en">English</option><option value="zh" selected>中文</option></select></header><section class="hero"><div class="eyebrow">A LITTLE HELP AT THE TABLE</div><h1 id="headline"></h1><p id="intro"></p></section><div class="notice" id="notice"></div><div class="fx"><div><strong id="fxTitle"></strong><div class="fx-status" id="fxStatus" aria-live="polite"></div></div><select id="currency" aria-label="Reference currency"><option value="IDR">IDR</option><option value="CNY" selected>CNY ¥</option><option value="USD">USD $</option></select></div><input class="search" id="search" type="search"><nav class="cats" id="cats" aria-label="Menu categories"></nav><div id="menu"></div><p class="hint" id="disclaimer"></p></main><nav class="site-nav" aria-label="页面导航"><a href="./" class="current" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3v7M7 3v7M10 3v7M4 7h6M7 10v11M17 3c-2.3 2-3 4.7-3 7h4M18 3v18"/></svg><span>点单<small>MENU</small></span></a><a href="translate.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5c0 4.2-3.6 7.5-8 7.5-1.1 0-2.2-.2-3.1-.6L5 20l.9-3.3A7 7 0 0 1 4 11.5C4 7.4 7.6 4 12 4s8 3.4 8 7.5Z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01" stroke-width="3"/></svg><span>聊天<small>CHAT</small></span></a></nav><div class="footer"><button class="bar" id="open"><span id="barlabel"></span><span id="barprice"></span></button></div><div class="dialog" id="dialog"><section class="sheet" role="dialog" aria-modal="true" aria-labelledby="orderTitle"><div class="top"><h2 id="orderTitle"></h2><button class="close" id="close" aria-label="Close">×</button></div><p class="muted" id="orderIntro"></p><div id="orderRows"></div><div id="totals"></div><div class="staff"><h3>🇮🇩 Untuk pelayan</h3><p>Permisi, saya ingin memesan:</p><ul id="staffRows"></ul><p id="staffTable"></p><p><strong>Mohon konfirmasi pesanan, pilihan, harga, dan ketersediaan. Terima kasih!</strong></p><p class="warn">Belum terkirim. Silakan tunjukkan layar ini kepada pelayan.</p></div><label id="tableLabel" for="table"></label><input id="table" class="input" maxlength="20"><div class="notice" id="optionsNote"></div><div class="actions"><button class="secondary" id="back"></button><button id="copy"></button></div><button id="newOrder" style="display:block;width:100%;margin-top:12px;padding:12px;border:1px solid #d3ded5;border-radius:12px;background:white;color:#365c47;font-weight:700"></button><p class="hint" id="copyHint"></p></section></div><script>
+// Source: user-provided menu photographs. Dual codes are deliberately preserved.
+const raw=`Express Bowl|Express Bowl|快餐碗
+211 / 215|Express Bowl Ayam|Chicken express bowl|鸡肉快餐碗|27273
+221 / 225|Express Bowl Fillet Ikan|Fish fillet express bowl|鱼柳快餐碗|33637
+231 / 235|Express Bowl Mix (Udang, Ikan, Ayam)|Mixed shrimp, fish & chicken bowl|虾、鱼、鸡肉混合快餐碗|35456
+Menu Spesial|Specials|特色菜
+4111|Spaghetti Bolognaise|Spaghetti bolognese|肉酱意大利面|26364
+4920|Nasi + Ayam Crispy Black Pepper Sauce|Rice with crispy chicken, black pepper sauce|米饭配黑椒脆鸡|31819
+4924|Nasi Crispy Chicken Spicy Mayo|Rice with crispy chicken, spicy mayo|米饭配香辣蛋黄酱脆鸡|30910
+2416|Mie Ayam Teriyaki|Chicken teriyaki noodles|照烧鸡肉面|42728
+2816|Nasi + Ayam Teriyaki|Rice with chicken teriyaki|米饭配照烧鸡|42728
+2817|Nasi + Ayam Katsu Teriyaki Saos|Rice with chicken katsu, teriyaki sauce|米饭配照烧酱炸鸡排|43637
+2417|Mie + Ayam Katsu Teriyaki Saos|Noodles with chicken katsu, teriyaki sauce|面条配照烧酱炸鸡排|43637
+4919|Nasi + Ayam Lada Hitam|Rice with black pepper chicken|米饭配黑椒鸡|41819
+4915|Nasi + Chicken Bulgogi|Rice with chicken bulgogi|米饭配韩式烤鸡|39091
+4918|Nasi + Sapo Tahu Ayam|Rice with chicken and tofu claypot|米饭配鸡肉豆腐煲|45455
+4917|Nasi + Sapo Tahu Sapi|Rice with beef and tofu claypot|米饭配牛肉豆腐煲|48182
+4916|Nasi + Sapo Tahu Seafood|Rice with seafood and tofu claypot|米饭配海鲜豆腐煲|50000
+4217 / 4317|Chicken Cordon Bleu|Chicken cordon bleu|蓝带鸡排|53637
+4216 / 4316|Chicken Mozarella|Chicken mozzarella|芝士鸡排|53637
+4219 / 4319|Chicken Steak Chessy|Cheesy chicken steak|芝士鸡排餐|53637
+4223 / 4323|Fish & Chips|Fish & chips|炸鱼薯条|59091
+Bihun|Rice vermicelli|米粉
+420|Bihun Ayam|Chicken rice vermicelli|鸡肉米粉|27273
+422|Bihun Ayam Bakso|Chicken rice vermicelli with meatballs|鸡肉丸子米粉|35455
+421|Bihun Ayam Pangsit Rebus|Chicken rice vermicelli with boiled wontons|鸡肉水饺米粉|33637
+424|Bihun Ayam Pangsit Rebus Bakso|Chicken rice vermicelli with wontons & meatballs|鸡肉水饺丸子米粉|40910
+520|Bihun Goreng Ayam|Fried rice vermicelli with chicken|鸡肉炒米粉|41819
+521|Bihun Siram Ayam|Rice vermicelli with chicken gravy|鸡肉浇汁米粉|41819
+522|Bihun Kuah Ayam|Chicken rice vermicelli soup|鸡肉汤米粉|41819
+523|Bihun Goreng Sapi|Fried rice vermicelli with beef|牛肉炒米粉|49091
+525|Bihun Siram Sapi|Rice vermicelli with beef gravy|牛肉浇汁米粉|49091
+524|Bihun Goreng Seafood|Fried rice vermicelli with seafood|海鲜炒米粉|51819
+Mie|Noodles|面条
+110 / 113|Bakso Halus Mie/Bihun|Smooth meatballs with noodles or rice vermicelli|细肉丸配面或米粉|25455
+140|Bakso Ikan Kuah|Fish ball soup|鱼丸汤|25455
+1387|Pangsit Rebus|Boiled wontons|水饺|24546
+410|Mie Ayam|Chicken noodles|鸡肉面|29091
+416|Mie Ayam Solaria Special (Pedas)|Solaria special chicken noodles (spicy)|特色鸡肉面（辣）|29091
+412|Mie Ayam Bakso|Chicken noodles with meatballs|鸡肉丸子面|37273
+411|Mie Ayam Pangsit Rebus|Chicken noodles with boiled wontons|鸡肉水饺面|35455
+414|Mie Ayam Pangsit Rebus Bakso|Chicken noodles with wontons & meatballs|鸡肉水饺丸子面|42728
+510|Mie Goreng Ayam|Fried noodles with chicken|鸡肉炒面|43637
+511|Mie Siram Ayam|Noodles with chicken gravy|鸡肉浇汁面|43637
+512|Mie Kuah Ayam|Chicken noodle soup|鸡肉汤面|43637
+513|Mie Goreng Sapi|Fried noodles with beef|牛肉炒面|50000
+515|Mie Siram Sapi|Noodles with beef gravy|牛肉浇汁面|50000
+514|Mie Goreng Seafood|Fried noodles with seafood|海鲜炒面|53638
+Kwetiau|Flat rice noodles|河粉
+430|Kwetiau Ayam|Chicken flat rice noodles|鸡肉河粉|35455
+432|Kwetiau Ayam Bakso|Chicken flat rice noodles with meatballs|鸡肉丸子河粉|43637
+431|Kwetiau Ayam Pangsit Rebus|Chicken flat rice noodles with boiled wontons|鸡肉水饺河粉|42728
+434|Kwetiau Ayam Pangsit Rebus Bakso|Chicken flat rice noodles with wontons & meatballs|鸡肉水饺丸子河粉|49091
+530|Kwetiau Goreng Ayam|Fried flat rice noodles with chicken|鸡肉炒河粉|48182
+531|Kwetiau Ayam Siram|Flat rice noodles with chicken gravy|鸡肉浇汁河粉|48182
+532|Kwetiau Masak Ayam|Cooked flat rice noodles with chicken|鸡肉河粉|48182
+540|Kwetiau Sapi Goreng|Fried flat rice noodles with beef|牛肉炒河粉|51819
+541|Kwetiau Sapi Siram|Flat rice noodles with beef gravy|牛肉浇汁河粉|51819
+550|Kwetiau Seafood Goreng|Fried flat rice noodles with seafood|海鲜炒河粉|54546
+551|Kwetiau Seafood Siram|Flat rice noodles with seafood gravy|海鲜浇汁河粉|54546
+Nasi Goreng|Fried rice|炒饭
+710|Nasi Goreng|Fried rice|炒饭|36364
+720|Nasi Goreng Special|Special fried rice|特色炒饭|42729
+791|Nasi Goreng Tom Yum Ayam|Tom yum chicken fried rice|冬阴功鸡肉炒饭|42729
+770|Smoked Chicken Fried Rice|Smoked chicken fried rice|烟熏鸡肉炒饭|45455
+721|Nasi Goreng Italy|Italian-style fried rice|意式炒饭|45455
+761|Nasi Goreng Kambing|Goat fried rice|山羊肉炒饭|56364
+762|Nasi Goreng Bebek Cabe Ijo|Duck fried rice with green chili|青椒鸭肉炒饭|47273
+763|Nasi Goreng Sapi Cabe Ijo|Beef fried rice with green chili|青椒牛肉炒饭|47273
+764|Nasi Goreng Teri Cabe Ijo|Anchovy fried rice with green chili|青椒小鱼干炒饭|47273
+740|Nasi Goreng Modern|Modern fried rice|现代风味炒饭|45455
+750|Nasi Goreng Petai|Fried rice with petai beans|臭豆炒饭|45455
+760|Nasi Goreng Sosis|Sausage fried rice|香肠炒饭|45455
+730|Nasi Goreng Seafood|Seafood fried rice|海鲜炒饭|52728
+732|Nasi Goreng Kepiting|Crab fried rice|蟹肉炒饭|55455
+4713|Nasi Goreng Teri Medan|Medan anchovy fried rice|棉兰小鱼干炒饭|52728
+790|Nasi Goreng Tom Yum Seafood|Tom yum seafood fried rice|冬阴功海鲜炒饭|52728
+711|Nasi Goreng Yang Chow|Yang Chow fried rice|扬州炒饭|51819
+Menu Paket|Rice sets|米饭套餐
+1010|Nasi Cap Cay|Rice with mixed vegetables|米饭配什锦蔬菜|46364
+1011|Nasi Ayam Cah Jamur|Rice with chicken & mushrooms|米饭配鸡肉蘑菇|46364
+1012|Nasi Ayam Cah Kapri|Rice with chicken & snow peas|米饭配鸡肉荷兰豆|46364
+1013|Nasi Ayam Cah Kembang Kol|Rice with chicken & cauliflower|米饭配鸡肉花椰菜|46364
+1050|Nasi Fu Yung Hai|Rice with fu yung hai omelette|米饭配芙蓉蛋|46364
+1016|Nasi Siram Ayam|Rice with chicken gravy|米饭配鸡肉浇汁|48182
+1017|Nasi Siram Sapi|Rice with beef gravy|米饭配牛肉浇汁|50910
+1018|Nasi Siram Seafood|Rice with seafood gravy|米饭配海鲜浇汁|53637
+1161|Nasi Bistik Ayam|Rice with chicken steak|米饭配鸡排|47273
+810|Nasi + Ayam Goreng Mentega|Rice with butter-fried chicken|米饭配黄油炒鸡|47273
+811|Nasi + Ayam Goreng Tepung|Rice with battered fried chicken|米饭配炸鸡|47273
+812|Nasi + Ayam Goreng Rica-rica|Rice with spicy rica-rica chicken|米饭配香辣鸡|47273
+813|Nasi + Ayam Nanking|Rice with Nanking chicken|米饭配南京鸡|47273
+814|Nasi + Ayam Asam Manis|Rice with sweet & sour chicken|米饭配酸甜鸡|47273
+1014|Nasi Cap Cay Seafood|Rice with seafood & mixed vegetables|米饭配海鲜什锦蔬菜|50000
+951|Nasi + Udang Goreng Tepung|Rice with battered fried shrimp|米饭配炸虾|50910
+1170|Nasi Bistik Sapi Mentega|Rice with butter beef steak|米饭配黄油牛排|51819
+1171|Nasi Bistik Sapi Tepung|Rice with battered beef steak|米饭配炸牛排|51819
+1172|Nasi Sapi Lada Hitam|Rice with black pepper beef|米饭配黑椒牛肉|51819
+920|Nasi + Cumi Goreng Mentega|Rice with butter-fried squid|米饭配黄油鱿鱼|54546
+921|Nasi + Cumi Goreng Tepung|Rice with battered fried squid|米饭配炸鱿鱼|54546
+922|Nasi + Cumi Goreng Rica-rica|Rice with spicy rica-rica squid|米饭配香辣鱿鱼|54546
+930|Nasi + Fillet Ikan Goreng Mentega|Rice with butter-fried fish fillet|米饭配黄油鱼柳|55455
+931|Nasi + Fillet Ikan Goreng Tepung|Rice with battered fish fillet|米饭配炸鱼柳|55455
+932|Nasi + Fillet Ikan Goreng Rica-rica|Rice with spicy rica-rica fish fillet|米饭配香辣鱼柳|55455
+934|Nasi + Fillet Ikan Asam Manis|Rice with sweet & sour fish fillet|米饭配酸甜鱼柳|55455
+Lo Mie & I Fu Mie|Lo mie & I fu mie|卤面与伊府面
+610|Lo Mie|Lo mie noodles|卤面|43637
+620|I Fu Mie|I fu mie noodles|伊府面|43637
+630|I Fu Mie Seafood|Seafood i fu mie noodles|海鲜伊府面|46364
+Menu Lain|Sides & other dishes|配菜与其他
+1250|Nasi Putih|White rice|白米饭|10910
+1210|Soup Ayam|Chicken soup|鸡汤|30910
+1384|Cap Cay Kuah|Mixed vegetables in soup|什锦蔬菜汤|41819
+1388|Cap Cay Seafood|Mixed vegetables with seafood|海鲜什锦蔬菜|56364
+1380|Cap Cay Goreng|Stir-fried mixed vegetables|炒什锦蔬菜|51819
+1240|Telur Dadar|Omelette|煎蛋饼|10001
+1241|Telur Mata Sapi|Fried egg|煎蛋|9092
+Snack|Snacks|小吃
+6104|Fish Ball Satay|Fish ball satay|鱼丸串|21819
+6106|Prawn Ball Satay|Prawn ball satay|虾丸串|21819
+6101|Spring Roll|Spring roll|春卷|21819
+6103|Fish Cake|Fish cake|鱼饼|21819
+6109|Cuttlefish Ball Satay|Cuttlefish ball satay|墨鱼丸串|21819
+6108|Crispy Mini Wonton|Crispy mini wontons|迷你炸馄饨|21819
+4112|French Fries|French fries|薯条|22728
+4119|Sweet Potato Fried|Fried sweet potato|炸红薯|22728
+4117|Siomay|Siomay dumplings|烧卖|15455
+4116|Wedges With Bolognaise Sauce|Potato wedges with bolognese sauce|肉酱薯角|25455
+4118|Chikado|Chikado|Chikado 小吃|21819
+5101|Seafood Tofu Roll|Seafood tofu roll|海鲜豆腐卷|18183
+Special Drink|Special drinks|特饮
+2103|Cookies & Cream Ice Blended|Cookies & cream ice blended|曲奇奶油冰沙|25455
+2104|Vanilla Latte Ice Blended|Vanilla latte ice blended|香草拿铁冰沙|25455
+2108|Matcha Latte|Matcha latte|抹茶拿铁|29091
+2109|Hojicha Latte|Hojicha latte|焙茶拿铁|29091
+Minuman|Drinks|饮料
+2105|Taro Milk Shake|Taro milkshake|芋头奶昔|25455
+2208|Teh Tarik|Pulled milk tea|拉茶|22728
+2211|Thai Tea|Thai tea|泰式奶茶|22728
+2215|Green Thai Tea|Thai green tea|泰式绿茶|22728
+2212|Kopi Vietnam|Vietnamese coffee|越南咖啡|22728
+2213|Es Kopi Malaka|Iced Malaka coffee|马六甲冰咖啡|22728
+2206|Black Currant|Blackcurrant drink|黑加仑饮品|22728
+2205|Frozen Capucino|Frozen cappuccino|冰沙卡布奇诺|22728
+2214|Peach Mango Smoothies|Peach mango smoothie|桃子芒果冰沙|23637
+1516|Orange Juice|Orange juice|橙汁|24546
+1511|Juice Alpukat|Avocado juice|牛油果汁|27274
+1512|Juice Melon|Melon juice|蜜瓜汁|23637
+1513|Juice Sirsak|Soursop juice|刺果番荔枝汁|24546
+1514|Juice Mangga (Musiman)|Mango juice (seasonal)|芒果汁（季节供应）|27274
+1515|Juice Tomat|Tomato juice|番茄汁|23637
+1610|Es Jeruk|Iced orange drink|冰橙饮|24547
+2201|Milk Shake Strawberry/Chocolate/Vanilla|Milkshake: strawberry, chocolate or vanilla|奶昔：草莓、巧克力或香草|22728
+2204|Milk Shake Blackcurrant|Blackcurrant milkshake|黑加仑奶昔|22728
+2209|Milo|Milo drink|美禄饮品|21819
+1710|Es Lemon Tea|Iced lemon tea|冰柠檬茶|18182
+1711|Es Lemonade|Iced lemonade|冰柠檬水|18182
+1713|Melon Lemonade|Melon lemonade|蜜瓜柠檬水|18182
+1912|Lychee Tea|Lychee tea|荔枝茶|17273
+1913|Ice Tea Green|Iced green tea|冰绿茶|15455
+2010|Air Mineral Botol|Bottled water|瓶装矿泉水|12728
+1421|Es Teh Manis|Iced sweet tea|冰甜茶|10001
+1411|Teh Manis Panas|Hot sweet tea|热甜茶|9091
+1420|Es Teh Tawar|Iced unsweetened tea|冰无糖茶|9091
+1410|Teh Panas|Hot tea|热茶|8182
+1430|Es Batu|Ice cubes|冰块|3637`;
+const groups=[],items=[];let group;for(const line of raw.split('\n')){let p=line.split('|');if(p.length===3){group={id:p[0],en:p[1],zh:p[2]};groups.push(group)}else{items.push({id:p[0],original:p[1],en:p[2],zh:p[3],price:+p[4],group})}}
+let lang='zh',active='all',cart={},currency='CNY',fxRates={},fxState='loading';try{let pref=JSON.parse(sessionStorage.getItem('menuBridgePrefs')||'{}');if(['zh','en'].includes(pref.lang))lang=pref.lang;if(['IDR','CNY','USD'].includes(pref.currency))currency=pref.currency}catch(e){}try{cart=JSON.parse(localStorage.getItem('menuBridgeCart')||'{}')}catch(e){}; const $=id=>document.getElementById(id);const fmt=n=>'Rp '+Math.round(n).toLocaleString('id-ID'); const tr=(en,zh)=>lang==='zh'?zh:en;function safe(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))};function convert(n){let x=fxRates[currency];return currency!=='IDR'&&x?`<span class="converted">≈ ${currency==='CNY'?'¥':'$'}${(n*x.rate).toFixed(2)}</span>`:''}function fxRender(){ $('fxTitle').textContent=tr('Reference currency','参考换算币种');let rates=['CNY','USD'].map(k=>fxRates[k]).filter(Boolean);let dates=[...new Set(rates.map(x=>x.date))].join(' / ');$('fxStatus').innerHTML=fxState==='loading'?tr('Loading exchange rates…','正在获取汇率…'):fxState==='error'?tr('Rates unavailable. Check your connection and reload.','汇率暂不可用，请检查网络并刷新。'):tr('Reference rates dated ','参考汇率日期：')+safe(dates)+' · <a href="https://frankfurter.dev/" target="_blank" rel="noopener noreferrer">Frankfurter</a><br>'+tr('Estimates only; actual payment rates may differ.','仅供参考，实际支付汇率可能不同。')}async function loadRates(){try{let response=await fetch('https://api.frankfurter.dev/v2/rates?base=IDR&quotes=CNY,USD');if(!response.ok)throw Error('HTTP '+response.status);let data=await response.json();if(!Array.isArray(data))throw Error('Bad data');let next={};for(let row of data){if(row.base==='IDR'&&['CNY','USD'].includes(row.quote)&&Number.isFinite(row.rate)&&row.rate>0&&/^\d{4}-\d{2}-\d{2}$/.test(row.date))next[row.quote]={rate:row.rate,date:row.date}}if(!next.CNY||!next.USD)throw Error('Incomplete data');fxRates=next;fxState='ok'}catch(e){fxRates={};fxState='error'}render()}function savePrefs(){try{sessionStorage.setItem('menuBridgePrefs',JSON.stringify({lang,currency}))}catch(e){}}function save(){try{localStorage.setItem('menuBridgeCart',JSON.stringify(cart))}catch(e){}}function count(){return Object.values(cart).reduce((a,b)=>a+b,0)}function total(){return items.reduce((s,i)=>s+(cart[i.id]||0)*i.price,0)}function change(id,n){cart[id]=Math.max(0,(cart[id]||0)+n);if(!cart[id])delete cart[id];save();render()}function render(){document.querySelector('.footer').classList.toggle('empty',count()===0);$('lang').value=lang;$('currency').value=currency;fxRender();document.documentElement.lang=lang==='zh'?'zh':'en';$('headline').textContent=tr('Find your next favorite.','轻松看懂，安心点单。');$('intro').textContent=tr('Explore the menu in your language, then show your order to the staff.','用中文浏览菜单，选好后把印尼语订单展示给服务员。');$('notice').textContent=tr('Photo-based menu · Prices exclude 10% PB1. Please confirm prices, ingredients and availability with staff.','根据菜单照片整理 · 标价不含 10% PB1。价格、食材及供应情况请向服务员确认。');$('search').placeholder=tr('Search dishes, ingredients or menu number','搜索菜名、食材或菜单编号');$('barlabel').textContent=tr('Your order','查看订单')+' · '+count();$('barprice').textContent=fmt(total())+'  →';$('disclaimer').textContent=tr('Translations are guides only. Ask staff about allergens, dietary needs and preparation.','翻译仅供参考；过敏原、饮食禁忌及具体做法请向服务员确认。');$('cats').innerHTML=[{id:'all',en:'All',zh:'全部'},...groups].map(g=>`<button class="${active===g.id?'active':''}" data-cat="${safe(g.id)}">${safe(g[lang])}</button>`).join('');const q=$('search').value.trim().toLowerCase();const found=items.filter(i=>(active==='all'||i.group.id===active)&&(!q||[i.id,i.original,i.en,i.zh].some(v=>v.toLowerCase().includes(q))));$('menu').innerHTML=groups.map(g=>{let list=found.filter(i=>i.group===g);if(!list.length)return '';return `<section class="group"><h2>${safe(g[lang])}</h2><div class="sub">${safe(g.id)} · ${list.length}</div>${list.map(i=>`<div class="item"><div class="info"><div class="name">${safe(i[lang])}</div><div class="original">${safe(i.original)} · #${safe(i.id)}</div><div class="price">${fmt(i.price)} ${convert(i.price)}</div></div>${cart[i.id]?`<div class="qty"><button data-id="${safe(i.id)}" data-delta="-1" aria-label="Remove one">−</button><span>${cart[i.id]}</span><button data-id="${safe(i.id)}" data-delta="1" aria-label="Add one">+</button></div>`:`<button class="add" data-id="${safe(i.id)}" data-delta="1" aria-label="Add ${safe(i.en)}">+</button>`}</div>`).join('')}</section>`}).join('')||`<div class="empty">${tr('No matches found.','没有找到匹配的菜品。')}</div>`;renderOrder()}
+function renderOrder(){const selected=items.filter(i=>cart[i.id]);$('orderTitle').textContent=tr('Your order','你的订单');$('orderIntro').textContent=tr('Show this screen to your server. Your order is not sent automatically.','请把此页面出示给服务员；订单不会自动发送。');$('orderRows').innerHTML=selected.length?selected.map(i=>`<div class="orderrow"><span>× ${cart[i.id]}</span><b>${safe(i[lang])}</b><small>${safe(i.original)} · #${safe(i.id)} · ${fmt(i.price)}</small><div class="qty"><button data-id="${safe(i.id)}" data-delta="-1" aria-label="Remove one">−</button><span>${cart[i.id]}</span><button data-id="${safe(i.id)}" data-delta="1" aria-label="Add one">+</button></div></div>`).join(''):`<p class="empty">${tr('Your order is empty. Add a dish to get started.','还没有选择菜品，先去菜单里添加吧。')}</p>`;$('totals').innerHTML=`<div class="sum"><span>${tr('Subtotal','小计')}</span><span>${fmt(total())} ${convert(total())}</span></div><p class="muted">${tr('Before 10% PB1. Final amount confirmed by restaurant.','不含 10% PB1；最终金额以餐厅确认为准。')}</p>`;$('staffRows').innerHTML=selected.map(i=>`<li><b>${cart[i.id]} × ${safe(i.original)}</b><br><small>No. ${safe(i.id)}</small></li>`).join('')||'<li>—</li>';$('staffTable').textContent=$('table').value?'Nomor meja: '+$('table').value:'';$('tableLabel').textContent=tr('Table number (optional)','桌号（可选）');$('table').placeholder=tr('e.g. 12','例如 12');$('optionsNote').textContent=tr('Some dishes have choices: express bowl sauce; rice or fries for selected specials; noodles or vermicelli; milkshake flavor. Tell your server your choice. Menu numbers with a slash are printed as two codes; ask staff which applies.','部分菜品需要选择：快餐碗酱汁、部分特色菜配米饭或薯条、面条或米粉、奶昔口味。请告知服务员。斜杠表示原菜单有两个编号，请由服务员确认。');$('newOrder').textContent=tr('Start a new order','开始新点单');$('back').textContent=tr('Continue browsing','继续选菜');$('copy').textContent=tr('Copy Indonesian order','复制印尼语订单');$('copyHint').textContent=tr('Copying does not place or send an order.','复制不会自动下单或发送。')}
+$('currency').addEventListener('change',e=>{currency=e.target.value;savePrefs();render()});$('cats').addEventListener('click',e=>{let b=e.target.closest('[data-cat]');if(b){active=b.dataset.cat;render()}});document.addEventListener('click',e=>{let b=e.target.closest('[data-delta]');if(b)change(b.dataset.id,+b.dataset.delta)});$('search').addEventListener('input',render);$('lang').addEventListener('change',e=>{lang=e.target.value;savePrefs();render()});$('open').onclick=()=>{$('dialog').classList.add('open');renderOrder()};$('close').onclick=$('back').onclick=()=>$('dialog').classList.remove('open');$('dialog').onclick=e=>{if(e.target===$('dialog'))$('dialog').classList.remove('open')};try{$('table').value=sessionStorage.getItem('menuBridgeTable')||localStorage.getItem('menuBridgeTable')||''}catch(e){}$('table').oninput=()=>{try{sessionStorage.setItem('menuBridgeTable',$('table').value);localStorage.setItem('menuBridgeTable',$('table').value)}catch(e){}renderOrder()};$('newOrder').onclick=()=>{if(!confirm(tr('Start a new order? The current selection and table number will be cleared; the current conversation will be saved.','开始新点单？当前已选菜品和桌号将清空，当前对话会保存到聊天记录。')))return;try{let k='menuBridgeChatSessionV1',chat=JSON.parse(sessionStorage.getItem(k)||localStorage.getItem(k)||'null');if(chat&&((Array.isArray(chat.messages)&&chat.messages.length)||(chat.draft||'').trim())){let hk='menuBridgeChatHistoryV1',h=JSON.parse(localStorage.getItem(hk)||'[]'),item=chat.currentId&&h.find(x=>x.id===chat.currentId);if(!item){chat.currentId=Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9);item={id:chat.currentId,title:chat.messages?.[0]?.text?.slice(0,30)||'未发送的对话',createdAt:Date.now()};h.unshift(item)}item.data=chat;item.updatedAt=Date.now();localStorage.setItem(hk,JSON.stringify(h))}sessionStorage.removeItem(k);localStorage.removeItem(k);sessionStorage.removeItem('menuBridgeTable');localStorage.removeItem('menuBridgeTable');localStorage.setItem('menuBridgeCart','{}');cart={};$('table').value='';$('dialog').classList.remove('open');render()}catch(e){alert(tr('Could not save the current conversation. The order was not cleared.','无法保存当前对话，订单未清空。'))}};$('copy').onclick=async()=>{let s=items.filter(i=>cart[i.id]).map(i=>`${cart[i.id]} x ${i.original} (No. ${i.id})`).join('\n');let t=`Permisi, saya ingin memesan:\n${s||'—'}${$('table').value?'\nNomor meja: '+$('table').value:''}\nMohon konfirmasi pesanan, pilihan, harga, dan ketersediaan. Terima kasih!`;try{await navigator.clipboard.writeText(t);$('copyHint').textContent=tr('Copied. Show or paste it to your server.','已复制，可以出示或粘贴给服务员。')}catch(e){$('copyHint').textContent=tr('Copy unavailable here; please show this screen.','此环境无法复制，请直接出示屏幕。')}};render();loadRates();
+</script></body></html>
