@@ -14,22 +14,154 @@ html,body{width:100%;max-width:100%;min-width:0;overflow-x:hidden;overscroll-beh
 .head{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
 .compose,.page-nav{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
 @media(max-width:380px){.head{padding-top:11px;padding-bottom:11px}.main{padding:12px}.card{padding:15px}.card h2{font-size:18px}.page-nav a{font-size:12px}.status strong{font-size:17px}}
-</style></head><body><div class="app"><header class="head"><h1>一起聊 <small>· Bicara bersama</small></h1><small>双手机测试版 · Two-phone test</small></header><details class="notice"><summary>ⓘ 翻译与数据说明 · Privacy</summary><p>请勿输入敏感信息。聊天通过 Cloudflare 传送，并由 MyMemory 翻译；会话最多保留两小时。<br>Chat uses Cloudflare and MyMemory; sessions expire after two hours.</p></details><div id="status" class="status hidden"></div><main class="main" id="main"><div id="home"><section class="card"><h2>我是顾客 · I am a guest</h2><p>创建对话，把四位数字告诉店员。<br>Create a chat and share its four-digit code.</p><label class="field">我的语言 / My language<select id="guestLang"><option value="zh-CN">中文</option><option value="en">English</option></select></label><label class="field">翻译给店员 / Translate for staff<select id="target"><option value="id">Bahasa Indonesia</option><option value="en">English</option></select></label><label class="field">自选四位数字（可留空自动生成）<input id="custom" class="code-input" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="例如 4286"></label><button class="action" id="create">创建对话 · Create chat</button></section><section class="card"><h2>我是店员 · Staff / Pelayan</h2><p>输入顾客提供的四位数字。<br>Enter the four-digit code from the guest.</p><label class="field">聊天号码 / Code<input id="code" class="code-input" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" autocomplete="off" placeholder="0000"></label><button class="action secondary" id="join">加入聊天 · Join / Gabung</button></section><div class="error" id="homeError" role="status"></div></div><div id="conversation" class="messages hidden" aria-live="polite"></div></main><footer id="compose" class="compose hidden"><textarea id="input" rows="1" placeholder="输入消息 / Type a message" aria-label="Message"></textarea><button class="action" id="send">发送<br>Send</button></footer><nav class="page-nav"><a href="./">🍽 点单 · Menu</a><a href="translate.html">💬 单手机聊天 · Chat</a></nav></div><script>
-const CHAT_API='https://menu-bridge-chat-pilot.820051795.workers.dev';const el=id=>document.getElementById(id), key='menuBridgeTwoPhonePrototype', cached=new Map();let session=null, polling=false, timer=null;
-function err(e){return ({code_in_use:'号码正在使用，请换一个。 / Code is in use.',invalid_code:'请输入四位数字。 / Enter four digits.',invalid_or_expired:'号码无效或已过期。 / Invalid or expired code.',unavailable:'此号码已有店员或申请。 / Code unavailable.',rate_limited:'尝试次数太多，请稍后再试。 / Too many attempts.',not_connected:'请先等待对方加入。 / Wait for the other person.',not_authorized:'会话已结束或请求被拒绝。 / Session ended or declined.'})[e]||'连接失败，请检查网络后重试。 / Connection failed. Try again.'}
-async function api(path,data){let r=await fetch(CHAT_API+'/api/'+path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(data)});let j=await r.json();if(!r.ok)throw Error(j.error);return j}
-function archive(){
- if(!session||session.archived||!session.records?.length)return;
- try{const h=JSON.parse(localStorage.getItem('menuBridgeChatHistoryV1')||'[]');const records=session.records.map(m=>({side:m.side==='guest'?'customer':'staff',text:m.text,from:m.side==='guest'?(session.guestLang||'zh-CN'):'autodetect',to:m.side==='guest'?(session.target||'id'):(session.guestLang||'zh-CN'),status:m.status||'error',translation:m.translation||''}));h.unshift({id:'two-phone-'+session.token.slice(0,16),title:'双手机 · '+records[0].text.slice(0,24),createdAt:Date.now(),updatedAt:Date.now(),data:{speaker:'customer',guest:session.guestLang||'zh-CN',staffTarget:session.target||'id',draft:'',messages:records}});localStorage.setItem('menuBridgeChatHistoryV1',JSON.stringify(h));session.archived=true;save()}catch{alert('无法保存聊天记录，请检查浏览器存储。 / Unable to save chat history.')}
+
+.app{position:fixed;top:var(--visual-top,0px);left:0;right:0;height:100vh;height:100dvh;height:var(--visual-height,100dvh);margin:0 auto}
+.compose{display:grid;grid-template-columns:minmax(0,1fr) 48px;align-items:end;width:100%;min-width:0;gap:8px}
+.compose textarea{display:block;width:100%;min-width:0;max-width:100%;height:48px;max-height:100px;padding:11px 12px;line-height:24px;font-size:16px}
+.compose .action{width:48px;height:48px;min-width:48px;min-height:48px;padding:0;border-radius:50%;display:grid;place-items:center}
+.compose .action svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.send-error{grid-column:1/-1;color:#9a3d31;font-size:12px;line-height:1.4;overflow-wrap:anywhere}.send-error:empty{display:none}
+.status-action{border:0;border-radius:8px;padding:7px 10px;min-height:38px}
+.translation small{display:block;margin-top:6px;color:#6b7e6d;line-height:1.4}
+.message.own{align-self:flex-end;background:#d9efdb}.message.other{align-self:flex-start;background:#fff}
+@media(max-width:700px){.app.composing .page-nav{display:none}.app.composing .compose{padding-bottom:8px}.app.composing .head{padding-top:8px;padding-bottom:8px}}
+</style></head><body><div class="app"><header class="head"><h1>一起聊 <small>· Bicara bersama</small></h1><small>双手机测试版 · Two-phone test</small></header><details class="notice"><summary>ⓘ 翻译与数据说明 · Privacy</summary><p>请勿输入敏感信息。聊天通过 Cloudflare 传送，并由 MyMemory 翻译；会话最多保留两小时。<br>Chat uses Cloudflare and MyMemory; sessions expire after two hours.</p></details><div id="status" class="status hidden"></div><main class="main" id="main"><div id="home"><section class="card"><h2>我是顾客 · I am a guest</h2><p>创建对话，把四位数字告诉店员。<br>Create a chat and share its four-digit code.</p><label class="field">我的语言 / My language<select id="guestLang"><option value="zh-CN">中文</option><option value="en">English</option></select></label><label class="field">翻译给店员 / Translate for staff<select id="target"><option value="id">Bahasa Indonesia</option><option value="en">English</option></select></label><label class="field">自选四位数字（可留空自动生成）<input id="custom" class="code-input" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="例如 4286"></label><button class="action" id="create">创建对话 · Create chat</button></section><section class="card"><h2>我是店员 · Staff / Pelayan</h2><p>输入顾客提供的四位数字。<br>Enter the four-digit code from the guest.</p><label class="field">聊天号码 / Code<input id="code" class="code-input" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" autocomplete="off" placeholder="0000"></label><button class="action secondary" id="join">加入聊天 · Join / Gabung</button></section><div class="error" id="homeError" role="status"></div></div><div id="conversation" class="messages hidden" aria-live="polite"></div></main><footer id="compose" class="compose hidden"><textarea id="input" rows="1" enterkeyhint="send" placeholder="输入消息 / Type a message" aria-label="Message"></textarea><button class="action" id="send" aria-label="发送消息 / Send message" title="发送 / Send"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5 21 12 4 19.5l2.3-7.5L4 4.5Zm2.3 7.5H14"/></svg></button><div class="send-error" id="sendError" role="status" aria-live="polite"></div></footer><nav class="page-nav"><a href="./">🍽 点单 · Menu</a><a href="translate.html">💬 单手机聊天 · Chat</a></nav></div><script>
+const CHAT_API='https://menu-bridge-chat-pilot.820051795.workers.dev';
+const el=id=>document.getElementById(id);
+const key='menuBridgeTwoPhonePrototype', historyKey='menuBridgeChatHistoryV1';
+const cached=new Set();
+let session=null, polling=false, sending=false, timer=null, ended=false, connected=false;
+
+const errors={
+ code_in_use:'号码正在使用，请换一个。 / Code is in use.',
+ invalid_code:'请输入四位数字。 / Enter four digits.',
+ invalid_or_expired:'对话已结束或号码已过期。 / Chat ended or code expired.',
+ unavailable:'此号码已有店员加入。 / A staff member has already joined.',
+ rate_limited:'尝试次数过多，请稍后再试。 / Too many attempts. Try later.',
+ not_connected:'请等待对方加入后再发送。 / Wait for the other person to join.',
+ not_authorized:'对话已结束或无法访问。 / Chat ended or access expired.',
+ message_limit:'此对话已满，请让顾客结束后开启新对话。 / Chat limit reached. Ask the guest to start a new chat.',
+ invalid_message:'消息为空或超过 500 字节，请分成几条发送。 / Message too long. Please split it.',
+ too_large:'消息过长，请分成几条发送。 / Message too long. Please split it.',
+ full:'当前会话较多，请稍后再试。 / Service is busy. Try later.',
+ network:'暂时无法连接，消息仍在输入框中，请检查网络后重试。 / Connection unavailable. Your message is kept; try again.'
+};
+function errorText(code){return errors[code]||errors.network}
+function credentials(active){return {code:active.code,token:active.token}}
+async function api(path,data){
+ let r,j; const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),12000);
+ try{r=await fetch(CHAT_API+'/api/'+path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(data),signal:controller.signal});j=await r.json()}catch{throw Error('network')}finally{clearTimeout(timeout)}
+ if(!r.ok)throw Error(j.error||'network');return j;
 }
-function save(){if(session)localStorage.setItem(key,JSON.stringify(session));else localStorage.removeItem(key)}
-function showError(e){el('homeError').textContent=err(e.message)}
-function enter(){el('home').classList.add('hidden');el('status').classList.remove('hidden');el('conversation').classList.remove('hidden');el('compose').classList.remove('hidden');el('send').disabled=true;poll();clearInterval(timer);timer=setInterval(poll,2500)}
-el('create').onclick=async()=>{try{let c=el('custom').value.trim();if(c&&!/^\d{4}$/.test(c))throw Error('invalid_code');session=await api('create',{code:c,guestLang:el('guestLang').value,target:el('target').value});save();enter()}catch(e){showError(e)}};
-el('join').onclick=async()=>{try{let c=el('code').value.trim();if(!/^\d{4}$/.test(c))throw Error('invalid_code');session=await api('join',{code:c});save();enter()}catch(e){showError(e)}};
-function reset(reason){if(reason)archive();clearInterval(timer);session=null;save();el('home').classList.remove('hidden');el('status').classList.add('hidden');el('conversation').classList.add('hidden');el('compose').classList.add('hidden');el('conversation').replaceChildren();if(reason)showError(Error(reason))}
-async function poll(){if(!session||polling)return;polling=true;const active=session;try{let s=await api('status',active);if(session!==active)return;session.role=s.role;session.guestLang=s.guestLang;session.target=s.target;session.records ||= [];save();let host=s.role==='guest',pending=s.role==='pending';const statusKey=session.token+':'+s.role+':'+s.joined;if(el('status').dataset.key!==statusKey){el('status').dataset.key=statusKey;el('status').replaceChildren();let name=document.createElement('span');name.textContent=(host?'顾客 · Guest':pending?'等待顾客确认 · Waiting for guest':'店员 · Staff')+'　';let number=document.createElement('strong');number.textContent=session.code;el('status').append(name,number);let note=document.createElement('div');note.textContent=pending?'正在连接 / Connecting':s.joined?'已连接 / Connected':'把号码告诉店员 / Tell staff this code';note.style.cssText='font-size:12px;margin-top:3px';el('status').append(note);if(host){let end=document.createElement('button');end.className='secondary';end.textContent='结束 / End';end.style.cssText='float:right;border:0;border-radius:8px;padding:5px 9px';end.onclick=async()=>{if(!confirm('结束此聊天？号码将失效。 / End this chat?'))return;try{await api('end',session);archive();reset()}catch(e){alert(err(e.message))}};el('status').append(end)}}el('send').disabled=pending||!s.joined;el('input').disabled=pending||!s.joined;if(!pending){for(const m of s.messages)if(!cached.has(m.id)){cached.set(m.id,true);let stored=session.records.find(x=>x.id===m.id);if(!stored){stored={...m,status:'pending'};session.records.push(stored);save()}render(stored,s)}}}catch(e){if(session!==active)return;if(['invalid_or_expired','not_authorized'].includes(e.message))reset(e.message);else{el('status').dataset.key='';el('status').textContent='连接中断，正在重试 / Reconnecting…'}}finally{polling=false}}
-async function render(m,state){let node=document.createElement('div');node.className='message '+m.side;let who=document.createElement('small');who.textContent=m.side==='guest'?'顾客 · Guest':'店员 · Staff';let text=document.createElement('div');text.textContent=m.text;let result=document.createElement('div');result.className='translation';result.textContent='翻译中… / Translating…';node.append(who,text,result);el('conversation').append(node);el('main').scrollTop=el('main').scrollHeight;if(m.status==='ok'&&m.translation){result.textContent=m.translation;return}let from=m.side==='guest'?state.guestLang:'autodetect',to=m.side==='guest'?state.target:state.guestLang;if(from===to){result.textContent='原文与目标语言相同 / Same language';m.status='same';save();return}try{let q=new URLSearchParams({q:m.text,langpair:from+'|'+to});let r=await fetch('https://api.mymemory.translated.net/get?'+q);let j=await r.json();if(Number(j.responseStatus)!==200||!j.responseData?.translatedText)throw Error();result.textContent=j.responseData.translatedText;m.translation=j.responseData.translatedText;m.status='ok';save()}catch{result.textContent='翻译失败 / Translation unavailable. ';m.status='error';save();const retry=document.createElement('button');retry.className='secondary';retry.textContent='重试 / Retry';retry.onclick=()=>{node.remove();m.status='pending';render(m,state)};result.append(retry)}}
-el('send').onclick=async()=>{let text=el('input').value.trim();if(!text)return;if(new TextEncoder().encode(text).length>500){alert('消息太长，请分开发送。 / Message too long.');return}el('send').disabled=true;try{await api('message',{...session,text});el('input').value='';await poll()}catch(e){alert(err(e.message))}finally{el('send').disabled=false}};
+function save(){try{if(session)localStorage.setItem(key,JSON.stringify(session));else localStorage.removeItem(key);return true}catch{showComposeError('设备无法保存草稿，请勿关闭页面。 / Unable to save draft on this device.');return false}}
+function archive(){
+ if(!session||session.archived||(!session.records?.length&&!session.draft?.trim()))return true;
+ try{
+  const h=JSON.parse(localStorage.getItem(historyKey)||'[]');
+  const records=(session.records||[]).map(m=>({side:m.side==='guest'?'customer':'staff',text:m.text,from:m.side==='guest'?(session.guestLang||'zh-CN'):'autodetect',to:m.side==='guest'?(session.target||'id'):(session.guestLang||'zh-CN'),status:m.status||'error',translation:m.translation||''}));
+  h.unshift({id:'two-phone-'+session.token.slice(0,16),title:'双手机 · '+(records[0]?.text||session.draft||'聊天').slice(0,24),createdAt:Date.now(),updatedAt:Date.now(),data:{speaker:'customer',guest:session.guestLang||'zh-CN',staffTarget:session.target||'id',draft:session.draft||'',messages:records}});
+  localStorage.setItem(historyKey,JSON.stringify(h));session.archived=true;return save();
+ }catch{showComposeError('无法保存聊天记录，请检查浏览器存储。 / Unable to save chat history.');return false}
+}
+function showComposeError(text){el('sendError').textContent=text||''}
+function syncSend(){el('send').disabled=sending||ended||!connected;el('input').disabled=false;}
+function showHomeError(e){el('homeError').textContent=errorText(e.message)}
+function updateViewport(){
+ const v=window.visualViewport, app=document.querySelector('.app');
+ if(!v)return;
+ if(v.scale>1.05){app.style.removeProperty('--visual-height');app.style.removeProperty('--visual-top');return}
+ app.style.setProperty('--visual-height',`${Math.round(v.height)}px`);
+ app.style.setProperty('--visual-top',`${Math.round(v.offsetTop)}px`);
+}
+let viewportFrame=0;
+function queueViewport(){cancelAnimationFrame(viewportFrame);viewportFrame=requestAnimationFrame(updateViewport)}
+window.visualViewport?.addEventListener('resize',queueViewport);
+window.visualViewport?.addEventListener('scroll',queueViewport);
+window.addEventListener('resize',queueViewport);
+let blurTimer=0;
+el('input').addEventListener('focus',()=>{clearTimeout(blurTimer);document.querySelector('.app').classList.add('composing');queueViewport()});
+// A tap on Send blurs the textarea before the click event.  Keep the layout
+// stable until that click has been delivered, otherwise the button moves away.
+el('input').addEventListener('blur',()=>{clearTimeout(blurTimer);blurTimer=setTimeout(()=>{if(document.activeElement!==el('input')){document.querySelector('.app').classList.remove('composing');queueViewport()}},500)});
+el('input').addEventListener('input',()=>{if(session){session.draft=el('input').value;save()}showComposeError('')});
+el('input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing&&e.keyCode!==229){e.preventDefault();el('send').click()}});
+updateViewport();
+
+function enter(){
+ ended=false;connected=false;cached.clear();el('conversation').replaceChildren();
+ el('home').classList.add('hidden');el('status').classList.remove('hidden');el('conversation').classList.remove('hidden');el('compose').classList.remove('hidden');
+ el('input').value=session.draft||session.outbox?.text||'';showComposeError('');syncSend();
+ for(const m of session.records||[]){cached.add(m.id);render(m,{guestLang:session.guestLang||'zh-CN',target:session.target||'id'})}
+ poll();clearInterval(timer);timer=setInterval(poll,2500);
+}
+async function start(path,data){
+ const button=el(path==='create'?'create':'join');button.disabled=true;el('homeError').textContent='';
+ try{session=await api(path,data);save();enter()}catch(e){showHomeError(e)}finally{button.disabled=false}
+}
+el('create').onclick=()=>{let code=el('custom').value.trim();if(code&&!/^\d{4}$/.test(code))return showHomeError(Error('invalid_code'));start('create',{code,guestLang:el('guestLang').value,target:el('target').value})};
+el('join').onclick=()=>{let code=el('code').value.trim();if(!/^\d{4}$/.test(code))return showHomeError(Error('invalid_code'));start('join',{code})};
+function reset(){
+ clearInterval(timer);session=null;ended=false;connected=false;save();cached.clear();
+ document.querySelector('.app').classList.remove('composing');el('home').classList.remove('hidden');el('status').classList.add('hidden');el('conversation').classList.add('hidden');el('compose').classList.add('hidden');el('conversation').replaceChildren();el('homeError').textContent='';showComposeError('');queueViewport();
+}
+function statusView(state){
+ const host=session.role==='guest', statusKey=[session.token,session.role,state.joined,ended].join(':');
+ if(el('status').dataset.key===statusKey)return;
+ el('status').dataset.key=statusKey;el('status').replaceChildren();
+ const name=document.createElement('span');name.textContent=ended?'对话已结束 · Chat ended':host?'顾客 · Guest':'店员 · Staff';
+ const number=document.createElement('strong');number.textContent=session.code;el('status').append(name,number);
+ const note=document.createElement('div');note.textContent=ended?'消息和草稿保存在此设备。 / Messages and draft stay on this device.':state.joined?'已连接 / Connected':'把号码告诉店员 / Tell staff this code';el('status').append(note);
+ if(host||ended){const end=document.createElement('button');end.className='secondary status-action';end.textContent=ended?'返回 / Back':'结束 / End';end.onclick=async()=>{
+   if(!ended&&!confirm('结束此聊天？号码将失效。 / End this chat?'))return;
+   end.disabled=true;
+   try{if(!ended){await api('end',credentials(session));ended=true;connected=false;clearInterval(timer);el('status').dataset.key='';statusView({joined:false});syncSend()}if(archive())reset()}
+   catch(e){showComposeError(errorText(e.message))}finally{end.disabled=false}
+  };el('status').append(end)}
+}
+async function poll(){
+ if(!session||polling||ended)return;
+ polling=true;const active=session;
+ try{
+  const s=await api('status',{...credentials(active),after:(active.records||[]).length});if(session!==active)return;
+  session.role=s.role;session.guestLang=s.guestLang;session.target=s.target;session.records ||= [];connected=!!s.joined&&s.role!=='pending';save();statusView(s);syncSend();
+  el('input').placeholder=session.role==='guest'?'输入消息 / Type a message':'Tulis pesan / Type a message';
+  let changed=false;
+  if(s.role!=='pending')for(const m of s.messages)if(!cached.has(m.id)){cached.add(m.id);let saved=session.records.find(x=>x.id===m.id);if(!saved){saved={...m,status:'pending'};session.records.push(saved);changed=true}render(saved,s)}
+  if(changed)save();
+ }catch(e){
+  if(session!==active)return;
+  if(['invalid_or_expired','not_authorized'].includes(e.message)){ended=true;connected=false;clearInterval(timer);statusView({joined:false});syncSend();showComposeError(errorText(e.message));}
+  else{connected=false;syncSend();el('status').dataset.key='';el('status').textContent='连接中断，正在重试 / Reconnecting…';}
+ }finally{polling=false}
+}
+async function render(m,state){
+ const node=document.createElement('div');node.className='message '+(m.side===session?.role?'own':'other');
+ const who=document.createElement('small');who.textContent=m.side==='guest'?'顾客 · Guest':'店员 · Staff';
+ const original=document.createElement('div');original.textContent=m.text;
+ const result=document.createElement('div');result.className='translation';result.textContent='翻译中… / Translating…';node.append(who,original,result);el('conversation').append(node);el('main').scrollTop=el('main').scrollHeight;
+ function showTranslation(){result.textContent=m.translation;if(m.translation.trim().toLowerCase()===m.text.trim().toLowerCase()){const note=document.createElement('small');note.textContent='译文与原文相同，请核对 / Translation unchanged; please check.';result.append(note)}}
+ if(m.status==='ok'&&m.translation){showTranslation();return}
+ const from=m.side==='guest'?state.guestLang:'autodetect',to=m.side==='guest'?state.target:state.guestLang;
+ if(from===to){result.textContent='原文与目标语言相同 / Same language';m.status='same';return}
+ try{const q=new URLSearchParams({q:m.text,langpair:from+'|'+to});const r=await fetch('https://api.mymemory.translated.net/get?'+q);const j=await r.json();if(Number(j.responseStatus)!==200||typeof j.responseData?.translatedText!=='string'||!j.responseData.translatedText.trim())throw Error();m.translation=j.responseData.translatedText;m.status='ok';showTranslation();save()}
+ catch{result.textContent='翻译失败 / Translation unavailable. ';m.status='error';save();const retry=document.createElement('button');retry.className='secondary';retry.textContent='重试 / Retry';retry.onclick=()=>{node.remove();m.status='pending';render(m,state)};result.append(retry)}
+}
+function newRequestId(){const b=crypto.getRandomValues(new Uint8Array(16));return Array.from(b,x=>x.toString(16).padStart(2,'0')).join('')}
+el('send').onclick=async()=>{
+ if(!session||sending||ended)return;
+ const text=el('input').value.trim();if(!text){showComposeError('请输入消息 / Type a message first.');return}
+ if(new TextEncoder().encode(text).length>500){showComposeError(errorText('invalid_message'));return}
+ const active=session;
+ if(!session.outbox||session.outbox.text!==text)session.outbox={text,requestId:newRequestId()};
+ session.draft=el('input').value;save();sending=true;syncSend();showComposeError('正在发送… / Sending…');
+ try{
+  await api('message',{...credentials(active),text,requestId:session.outbox.requestId});
+  if(session!==active)return;
+  if(el('input').value.trim()===text){el('input').value='';session.draft=''}
+  session.outbox=null;save();showComposeError('');await poll();
+ }catch(e){if(session===active)showComposeError(errorText(e.message))}
+ finally{sending=false;syncSend()}
+};
 try{session=JSON.parse(localStorage.getItem(key));if(session?.code&&session?.token)enter()}catch{session=null}
+
 </script></body></html>
